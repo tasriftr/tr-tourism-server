@@ -21,6 +21,25 @@ async function run() {
     // await client.connect();
     const spotCollection = client.db("coffeeDB").collection("spot");
     const countryCollection = client.db("coffeeDB").collection("country");
+    app.get("/spot", async (req, res) => {
+      try {
+        const cursor = spotCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch spots" });
+      }
+    });
+
+    app.post("/spot", async (req, res) => {
+      try {
+        const newSpot = req.body;
+        const result = await spotCollection.insertOne(newSpot);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to add spot" });
+      }
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
