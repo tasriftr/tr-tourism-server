@@ -40,6 +40,41 @@ async function run() {
         res.status(500).send({ error: "Failed to add spot" });
       }
     });
+    app.get("/spot/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await spotCollection.findOne(query);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch spot details" });
+      }
+    });
+
+    app.put("/spot/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+        const options = { upsert: true };
+        const updateSpot = req.body;
+        const spot = {
+          $set: {
+            name: updateSpot.name,
+            country: updateSpot.country,
+            location: updateSpot.location,
+            average_cost: updateSpot.average_cost,
+            short_description: updateSpot.short_description,
+            seasonality: updateSpot.seasonality,
+            totalVisitorsPerYear: updateSpot.totalVisitorsPerYear,
+            travel_time: updateSpot.travel_time,
+          },
+        };
+        const result = await spotCollection.updateOne(filter, spot, options);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to update spot" });
+      }
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
