@@ -15,6 +15,19 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+async function run() {
+  try {
+    // Connect the client to the server (optional starting in v4.7)
+    // await client.connect();
+    const spotCollection = client.db("coffeeDB").collection("spot");
+    const countryCollection = client.db("coffeeDB").collection("country");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    // await client.close();
+  }
+}
+// done
+run().catch(console.dir);
 app.get("/", (req, res) => {
   res.send("Tr tourism server ");
 });
