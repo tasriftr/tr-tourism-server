@@ -75,6 +75,61 @@ async function run() {
         res.status(500).send({ error: "Failed to update spot" });
       }
     });
+    app.delete("/spot/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await spotCollection.deleteOne(query);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to delete spot" });
+      }
+    });
+
+    app.get("/country", async (req, res) => {
+      try {
+        const cursor = countryCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch countries" });
+      }
+    });
+
+    app.get("/country/:country_name", async (req, res) => {
+      try {
+        const country_name = req.params.country_name;
+        const query = { country: country_name };
+        const cursor = spotCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch spots for country" });
+      }
+    });
+
+    app.get("/mylist/:userId", async (req, res) => {
+      try {
+        const userId = req.params.userId;
+        const query = { email: userId };
+        const cursor = spotCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch user's list" });
+      }
+    });
+    app.get("/season/:seasonId", async (req, res) => {
+      try {
+        const seasonId = req.params.seasonId;
+        const query = { seasonality: seasonId };
+        const cursor = spotCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch user's list" });
+      }
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
