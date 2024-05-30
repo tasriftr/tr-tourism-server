@@ -4,7 +4,11 @@ require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5300;
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://tr-tourism.web.app"], // Remove trailing slashes
+  })
+);
 app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@test.mqwonpn.mongodb.net/?retryWrites=true&w=majority&appName=test`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -130,6 +134,9 @@ async function run() {
         res.status(500).send({ error: "Failed to fetch user's list" });
       }
     });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
